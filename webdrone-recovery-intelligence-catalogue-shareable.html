@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webdrone Recovery Intelligence - Solutions Catalogue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#2f367b;
+    --navy-2:#3d4690;
+    --navy-3:#4b5aa6;
+    --navy-4:#596fbc;
+    --mint:#64cec0;
+    --mint-2:#4aa89c;
+    --mint-3:#7fd9ce;
+    --mint-4:#9ae3da;
+    --white:#ffffff;
+    --ink:#20254f;
+    --paper:#f6f7fb;
+    --shadow: 0 12px 30px rgba(47,54,123,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Montserrat',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:44px 6vw 30px;
+    position:relative;
+    overflow:hidden;
+  }
+  .droplet{
+    position:absolute;
+    width:220px;height:220px;
+    background:var(--mint);
+    border-radius:50% 8% 50% 8% / 8% 50% 8% 50%;
+  }
+  .droplet.d1{ right:-60px; top:-70px; transform:rotate(20deg); opacity:0.28;}
+  .header-inner{position:relative; z-index:2; max-width:1000px; margin:0 auto; text-align:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--mint-4); font-weight:700; margin-bottom:14px;
+  }
+  .eyebrow .chip{width:10px;height:10px;background:var(--mint);border-radius:2px 6px 2px 6px;display:inline-block;}
+  h1{
+    font-size:clamp(19px,3vw,31px);
+    font-weight:800;
+    line-height:1.25;
+    margin:0 0 12px;
+    letter-spacing:-0.005em;
+  }
+  h1 .accent{color:var(--mint);}
+  .subhead{
+    font-size:clamp(13px,1.5vw,16px);
+    font-weight:400;
+    max-width:560px;
+    color:#dfe1f5;
+    line-height:1.55;
+    margin:0 auto;
+  }
+
+  .tabs-wrap{
+    max-width:1100px; margin:0 auto;
+    padding:32px 6vw 0;
+    position:relative; z-index:3;
+  }
+  .tabs{
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .tab{
+    font-family:'Montserrat',sans-serif;
+    border:none; cursor:pointer;
+    border-radius:10px;
+    padding:13px 16px;
+    width:176px;
+    flex:0 0 auto;
+    color:#fff;
+    text-align:left;
+    box-shadow:0 4px 10px rgba(30,34,80,0.14);
+    transform:translateY(0);
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    position:relative;
+    opacity:0.82;
+  }
+  .tab:hover{transform:translateY(-3px); opacity:0.95;}
+  .tab.active{transform:translateY(-3px); box-shadow:0 10px 18px rgba(30,34,80,0.22); opacity:1;}
+  .tab .tab-eyebrow{
+    font-size:9px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85; font-weight:700;
+    display:block; margin-bottom:4px; white-space:normal; line-height:1.35;
+  }
+  .tab .tab-label{font-size:13.5px; font-weight:800; line-height:1.2; display:block;}
+  .tab.all{background:var(--navy);}
+  .tab.surface{background:var(--navy-4);}
+  .tab.identify{background:var(--mint-2);}
+  .tab.act{background:linear-gradient(120deg,var(--navy) 0%, var(--navy) 40%, var(--mint) 100%);}
+
+  .fan-section{
+    max-width:1100px; margin:0 auto;
+    padding:34px 6vw 6px;
+  }
+  .fan-wrap{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .nav-arrow{
+    width:44px; height:44px; border-radius:50%;
+    border:1.5px solid rgba(47,54,123,0.18);
+    background:#fff; color:var(--navy);
+    font-size:20px; cursor:pointer; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(47,54,123,0.10);
+    transition:all .15s ease;
+  }
+  .nav-arrow:hover{background:var(--navy); color:#fff;}
+  .nav-arrow:disabled{opacity:0.3; cursor:default; pointer-events:none;}
+  .fan-stage{
+    position:relative;
+    width:100%;
+    max-width:640px;
+    height:360px;
+    display:flex;
+    justify-content:center;
+    touch-action:pan-y;
+    user-select:none;
+  }
+  .fan-card{
+    position:absolute;
+    left:50%;
+    bottom:0;
+    width:104px;
+    height:300px;
+    margin-left:-52px;
+    border-radius:14px 14px 6px 6px;
+    transform-origin:bottom center;
+    box-shadow:0 8px 18px rgba(20,22,60,0.22);
+    cursor:pointer;
+    transition:transform .32s cubic-bezier(.2,.8,.3,1), opacity .32s ease, box-shadow .2s ease;
+    display:flex;
+    flex-direction:column;
+    color:#fff;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.25);
+  }
+  .fan-card .fc-code{
+    font-size:10px; font-weight:700; letter-spacing:0.06em;
+    padding:12px 10px 0; opacity:0.9;
+  }
+  .fan-card .fc-mark{
+    position:absolute; top:10px; right:10px;
+    width:14px;height:14px; background:rgba(255,255,255,0.85);
+    border-radius:40% 10% 40% 10% / 10% 40% 10% 40%;
+  }
+  .fan-card .fc-title{
+    margin-top:auto;
+    padding:0 10px 16px;
+    font-size:13.5px; font-weight:800; line-height:1.28;
+    text-shadow:0 1px 3px rgba(0,0,0,0.18);
+  }
+  .fan-card.active{box-shadow:0 20px 40px rgba(20,22,60,0.35);}
+  .fan-card .fc-pulltab{
+    position:absolute; bottom:10px; right:10px;
+    width:20px; height:20px; border-radius:50%;
+    background:rgba(255,255,255,0.25);
+    display:none; align-items:center; justify-content:center;
+    font-size:11px; color:#fff;
+  }
+  .fan-card.active .fc-pulltab{display:flex;}
+
+  .fan-caption{
+    text-align:center; margin-top:18px;
+  }
+  .fan-caption .fc-code2{font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--mint-2); margin-bottom:4px;}
+  .fan-caption .fc-title2{font-size:19px; font-weight:800; color:var(--navy);}
+  .fan-caption .fc-hint{font-size:12px; color:#8288b0; margin-top:8px;}
+  .fan-caption .fc-counter{font-size:11.5px; color:#9297bb; margin-top:4px; font-weight:600;}
+
+  .empty-state{
+    max-width:1100px; margin:0 auto; padding:60px 6vw; text-align:center; color:#8288b0; font-size:14px;
+  }
+
+  footer{
+    text-align:center; padding:40px 26px; font-size:11.5px; color:#9297bb;
+  }
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(32,37,79,0.55);
+    display:none; align-items:center; justify-content:center;
+    padding:24px; z-index:50;
+    backdrop-filter:blur(2px);
+  }
+  .overlay.open{display:flex;}
+  .card{
+    background:#fff; border-radius:20px; max-width:720px; width:100%;
+    max-height:88vh; overflow-y:auto;
+    box-shadow:0 30px 80px rgba(20,22,60,0.35);
+    position:relative;
+  }
+  .card-top{
+    padding:34px 34px 26px;
+    color:#fff; position:relative; overflow:hidden;
+  }
+  .card-top .droplet{ width:150px; height:150px; opacity:0.22; right:-30px; bottom:-50px;}
+  .card-close{
+    position:absolute; top:18px; right:18px;
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,0.18); border:none; color:#fff;
+    font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .card-close:hover{background:rgba(255,255,255,0.32);}
+  .card-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:46px; height:46px; border-radius:50%;
+    background:#fff; border:1.5px solid rgba(47,54,123,0.18); color:var(--navy);
+    font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    z-index:60; transition:all .15s ease;
+    box-shadow:0 6px 16px rgba(20,22,60,0.25);
+  }
+  .card-nav:hover{background:var(--navy); color:#fff;}
+  .card-nav:disabled{opacity:0.25; cursor:default; pointer-events:none;}
+  .card-nav.prev{left:2vw;}
+  .card-nav.next{right:2vw;}
+  .card-counter{
+    position:absolute; bottom:14px; left:50%; transform:translateX(-50%);
+    font-size:11px; font-weight:700; letter-spacing:0.04em; color:rgba(255,255,255,0.75);
+  }
+  .card-code{font-size:12px; font-weight:700; letter-spacing:0.08em; opacity:0.85; margin-bottom:8px;}
+  .card-title{font-size:26px; font-weight:800; line-height:1.15; margin:0;}
+  .card-phase{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; opacity:0.85; margin-top:10px;}
+  .card-body{padding:28px 34px 34px;}
+  .block{margin-bottom:22px;}
+  .block:last-child{margin-bottom:0;}
+  .block-label{
+    font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.09em;
+    color:var(--mint-2); margin-bottom:8px; display:flex; align-items:center; gap:8px;
+  }
+  .block-label .mark{width:8px;height:8px;background:var(--mint-2);border-radius:2px 6px 2px 6px;}
+  .block-text{font-size:15px; line-height:1.6; color:#333863;}
+  .block.pain .block-label{color:#b45a5a;}
+  .block.pain .block-label .mark{background:#b45a5a;}
+  .block.solution .block-text{font-weight:700; color:var(--navy); font-size:17px;}
+
+  @media(max-width:520px){
+    header{padding:34px 5vw 26px;}
+    .fan-card{width:82px; height:250px; margin-left:-41px;}
+    
+    .fan-stage{height:300px;}
+    .tab{min-width:96px; padding:12px 12px 10px;}
+    .card-top{padding:26px 22px 20px;}
+    .card-body{padding:22px 22px 28px;}
+    .card-nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="droplet d1"></div>
+  <div class="header-inner">
+    <div class="eyebrow"><span class="chip"></span> Webdrone . Recovery Intelligence</div>
+    <h1>Every Recovery Intelligence Product fixes a problem.<br>Fan through to find your <span class="accent">solution</span>.</h1>
+    <p class="subhead">Browse Recovery Intelligence like a real swatch deck - flip through the cards, click the one that matches your problem, and see the fix on the back.</p>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="fan-section">
+  <div class="fan-wrap">
+    <button class="nav-arrow" id="prevBtn">‹</button>
+    <div class="fan-stage" id="fanStage"></div>
+    <button class="nav-arrow" id="nextBtn">›</button>
+  </div>
+  <div class="fan-caption" id="fanCaption" style="display:none;">
+    <div class="fc-code2" id="fcCode2"></div>
+    <div class="fc-title2" id="fcTitle2"></div>
+    <div class="fc-hint">Click the front card to open its full page &middot; use the arrows or drag to browse</div>
+    <div class="fc-counter" id="fcCounter"></div>
+  </div>
+  <div class="empty-state" id="emptyState" style="display:none;">No services in this category yet.</div>
+</div>
+
+<footer>webdrone.fr &middot; Recover value from cybercrime</footer>
+
+<div class="overlay" id="overlay">
+  <button class="card-nav prev" id="cardPrev">&#8249;</button>
+  <div class="card">
+    <div class="card-top" id="cardTop">
+      <div class="droplet"></div>
+      <button class="card-close" id="closeCard">&#10005;</button>
+      <div class="card-code" id="cardCode"></div>
+      <h2 class="card-title" id="cardTitle"></h2>
+      <div class="card-phase" id="cardPhase"></div>
+      <div class="card-counter" id="cardCounter"></div>
+    </div>
+    <div class="card-body" id="cardBody"></div>
+  </div>
+  <button class="card-nav next" id="cardNext">&#8250;</button>
+</div>
+
+<script>
+/* ---------------- Data ---------------- */
+const PHASES = [
+  { id:'surface', label:'Surface', tagline:"What telemetry misses" },
+  { id:'identify', label:'Identify & Investigate', tagline:'Name it. Prove it.' },
+  { id:'act', label:'Act & Recover', tagline:'Recover the value' }
+];
+const PHASE_COLORS = {
+  surface: ['#2f367b','#3d4690','#4b5aa6','#596fbc'],
+  identify: ['#3f9c90','#4aa89c','#64cec0','#7fd9ce'],
+  act: ['#2f367b','#64cec0']
+};
+
+const DATA = [
+  { id:'s1', code:'WD-S1', phase:'surface', title:'P2P MD5 Analysis',
+    hook:"Cracked builds, no visibility",
+    pain:"You don't know exactly which file or build of your software has been circumvented, or how - so security fixes lag behind new circumvention methods.",
+    explanation:"Identifies the precise file of your software that has been circumvented, feeding newly discovered circumvention methods straight back to your dev and security teams - closing breaches faster and building solid evidence that the software has been cracked." },
+  { id:'s2', code:'WD-S2', phase:'surface', title:'P2P Monitoring',
+    hook:"Piracy hiding in plain sight",
+    pain:"You don't know where in the world your software is being shared, or whether your latest security improvements are actually slowing piracy down.",
+    explanation:"Tracks where - by country - your software is being shared on P2P networks, revealing shifts in location and volume over time, reinforcing existing compliance cases with related IP hits, and showing whether your newest release is harder to crack than the last." },
+  { id:'s3', code:'WD-S3', phase:'surface', title:'Product Intelligence',
+    hook:"User feedback going unheard",
+    pain:"Product teams don't hear what users - including unauthorised ones - actually think of the software until it's too late to act on it.",
+    explanation:"Surfaces user feedback on the product, positive and negative, so product teams can respond to usage problems faster and shape the next release around real signal instead of guesswork." },
+  { id:'s4', code:'WD-S4', phase:'surface', title:'LCP Echo',
+    hook:"Reputational risk you can't see",
+    pain:"Your compliance program could be perceived as too aggressive online - and you won't know until the reputational damage is done.",
+    explanation:"Monitors what the targets of your License Compliance and Antipiracy program say online, showing how the program is perceived so you can adapt geography and methodology before reputational risk builds up." },
+  { id:'i1', code:'WD-I1', phase:'identify', title:'IP Lead Generator',
+    hook:"Anonymous IP addresses",
+    pain:"You have IP addresses linked to infringement, but no way to turn them into a named company you can actually act on.",
+    explanation:"Reverses IP addresses from any data source into company identification (around a 3% success rate), unveiling infringers your existing telemetry or P2P suppliers couldn't name - and turning them into cases with recoverable revenue." },
+  { id:'i2', code:'WD-I2', phase:'identify', title:'Lead Generation from Web Monitoring',
+    hook:"Leads left on the table",
+    pain:"Relying only on telemetry (PHT) data leaves leads on the table, and makes your whole pipeline dependent on a single data source.",
+    explanation:"Generates leads through web monitoring, independent of telemetry data - enriching existing leads with better enforcement leverage and reducing your program's dependency on any one source." },
+  { id:'i3', code:'WD-I3', phase:'identify', title:'WAPS Automated Case Creation',
+    hook:"Cases stuck in manual work",
+    pain:"Manually processing telemetry hits into compliance reports is slow and caps how many cases your team can realistically work.",
+    explanation:"Automates the processing, analysis and report generation behind telemetry-based cases - combining qualitative and quantitative analysis to raise both the volume and quality of cases, and the ROI they recover." },
+  { id:'i4', code:'WD-I4', phase:'identify', title:'Investigation',
+    hook:"Evidence you can't build alone",
+    pain:"Once a target is identified, you still need deep, verified evidence before you can act - and that takes expertise and law-enforcement relationships most teams don't have in-house.",
+    explanation:"Deep investigation on identified targets, going after crack providers at the root and delivering actionable reports built on relationships with police and enforcement bodies - saving your internal team's time and resources." },
+  { id:'a1', code:'WD-A1', phase:'act', title:'Market Protection',
+    hook:"Grey market, wide open",
+    pain:"Unauthorised copies of your software circulate openly across social media, marketplaces, torrents, direct download and forums - and infringers often claim vendors quietly benefit from that piracy.",
+    explanation:"Monitors, investigates and enforces against grey-market and unauthorised distribution wherever it appears, making pirated copies harder to find, diverting infringers toward legitimate sales, and protecting your reputation from the claim that piracy benefits you." },
+  { id:'a2', code:'WD-A2', phase:'act', title:'Enforcement Coordination',
+    hook:"Raids you can't run alone",
+    pain:"A violation is serious enough to justify legal action or a raid, but you lack the time, in-house skills or international legal network to actually run it.",
+    explanation:"Coordinates enforcement procedures internationally - bridging the client, technical experts and local lawyers - as a single focal point for raids and search orders, even in jurisdictions you've never tested before." },
+];
+
+/* ---------------- State ---------------- */
+let activeFilter = 'all';
+let activeIndex = 0;
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function phaseInfo(id){ return PHASES.find(p=>p.id===id); }
+function filteredData(){
+  return activeFilter==='all' ? DATA : DATA.filter(d=>d.phase===activeFilter);
+}
+function swatchColor(item){
+  const palette = PHASE_COLORS[item.phase] || ['#2f367b'];
+  const samePhase = DATA.filter(d=>d.phase===item.phase);
+  const i = samePhase.indexOf(item) % palette.length;
+  return palette[i];
+}
+function cardBackground(item){
+  if(item.phase==='act') return 'linear-gradient(135deg,'+PHASE_COLORS.act[0]+','+PHASE_COLORS.act[1]+')';
+  return swatchColor(item);
+}
+
+/* ---------------- Tabs ---------------- */
+function renderTabs(){
+  const el = document.getElementById('tabs');
+  el.innerHTML = '';
+  const allTab = document.createElement('button');
+  allTab.className = 'tab all' + (activeFilter==='all' ? ' active' : '');
+  allTab.innerHTML = `<span class="tab-eyebrow">Full deck</span><span class="tab-label">All services</span>`;
+  allTab.onclick = ()=>{ activeFilter='all'; activeIndex=0; renderTabs(); renderFan(); };
+  el.appendChild(allTab);
+  PHASES.forEach(p=>{
+    const b = document.createElement('button');
+    b.className = 'tab '+p.id+(activeFilter===p.id ? ' active' : '');
+    b.innerHTML = `<span class="tab-eyebrow">${escapeHtml(p.tagline)}</span><span class="tab-label">${escapeHtml(p.label)}</span>`;
+    b.onclick = ()=>{ activeFilter=p.id; activeIndex=0; renderTabs(); renderFan(); };
+    el.appendChild(b);
+  });
+}
+
+/* ---------------- Fan ---------------- */
+const STEP_DEG = 11;
+const VISIBLE_RANGE = 5;
+
+function renderFan(){
+  const list = filteredData();
+  const stage = document.getElementById('fanStage');
+  const caption = document.getElementById('fanCaption');
+  const empty = document.getElementById('emptyState');
+  stage.innerHTML = '';
+
+  if(!list.length){
+    caption.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('prevBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+    return;
+  }
+  empty.style.display = 'none';
+  caption.style.display = 'block';
+  if(activeIndex >= list.length) activeIndex = list.length-1;
+  if(activeIndex < 0) activeIndex = 0;
+
+  list.forEach((item, i)=>{
+    const delta = i - activeIndex;
+    const card = document.createElement('div');
+    card.className = 'fan-card' + (i===activeIndex ? ' active' : '');
+    const visible = Math.abs(delta) <= VISIBLE_RANGE;
+    const angle = delta * STEP_DEG;
+    const lift = i===activeIndex ? -34 : 0;
+    card.style.transform = `translateX(-50%) rotate(${angle}deg) translateY(${lift}px)`;
+    card.style.zIndex = 100 - Math.abs(delta);
+    card.style.opacity = visible ? (i===activeIndex ? 1 : Math.max(0.35, 1 - Math.abs(delta)*0.16)) : 0;
+    card.style.pointerEvents = visible ? 'auto' : 'none';
+    card.style.background = cardBackground(item);
+    card.innerHTML = `
+      <div class="fc-code">${escapeHtml(item.code||'')}</div>
+      <div class="fc-mark"></div>
+      <div class="fc-title">${escapeHtml(item.hook || item.pain)}</div>
+      <div class="fc-pulltab">&#8599;</div>
+    `;
+    card.onclick = (e)=>{
+      e.stopPropagation();
+      if(i===activeIndex){ openCard(item.id); }
+      else{ activeIndex = i; renderFan(); }
+    };
+    stage.appendChild(card);
+  });
+
+  const active = list[activeIndex];
+  document.getElementById('fcCode2').textContent = active.code||'';
+  document.getElementById('fcTitle2').textContent = active.title;
+  document.getElementById('fcCounter').textContent = `${activeIndex+1} / ${list.length}`;
+  document.getElementById('prevBtn').disabled = activeIndex<=0;
+  document.getElementById('nextBtn').disabled = activeIndex>=list.length-1;
+}
+
+function stepFan(dir){
+  const list = filteredData();
+  const next = activeIndex + dir;
+  if(next<0 || next>=list.length) return;
+  activeIndex = next;
+  renderFan();
+}
+document.getElementById('prevBtn').onclick = ()=>stepFan(-1);
+document.getElementById('nextBtn').onclick = ()=>stepFan(1);
+document.addEventListener('keydown', (e)=>{
+  if(document.getElementById('overlay').classList.contains('open')){
+    if(e.key==='Escape') closeCard();
+    if(e.key==='ArrowLeft') navCard(-1);
+    if(e.key==='ArrowRight') navCard(1);
+    return;
+  }
+  if(e.key==='ArrowLeft') stepFan(-1);
+  if(e.key==='ArrowRight') stepFan(1);
+});
+
+/* drag / swipe */
+(function(){
+  const stage = document.getElementById('fanStage');
+  let dragging=false, startX=0;
+  function start(x){ dragging=true; startX=x; }
+  function end(x){
+    if(!dragging) return;
+    dragging=false;
+    const dx = x - startX;
+    if(Math.abs(dx) > 40){ stepFan(dx < 0 ? 1 : -1); }
+  }
+  stage.addEventListener('mousedown', e=>start(e.clientX));
+  window.addEventListener('mouseup', e=>end(e.clientX));
+  stage.addEventListener('touchstart', e=>start(e.touches[0].clientX), {passive:true});
+  stage.addEventListener('touchend', e=>end(e.changedTouches[0].clientX));
+})();
+
+/* ---------------- Detail modal (read-only) ---------------- */
+function openCard(id){
+  const item = DATA.find(d=>d.id===id);
+  if(!item) return;
+  document.getElementById('overlay').classList.add('open');
+  document.querySelector('.tabs-wrap').style.visibility = 'hidden';
+  document.querySelector('.fan-section').style.visibility = 'hidden';
+  const list = filteredData();
+  const idx = list.findIndex(d=>d.id===id);
+  if(idx>=0) activeIndex = idx;
+  renderViewCard(item);
+}
+function closeCard(){
+  document.getElementById('overlay').classList.remove('open');
+  document.querySelector('.tabs-wrap').style.visibility = 'visible';
+  document.querySelector('.fan-section').style.visibility = 'visible';
+  renderFan();
+}
+function navCard(dir){
+  const list = filteredData();
+  const next = activeIndex + dir;
+  if(next<0 || next>=list.length) return;
+  activeIndex = next;
+  renderViewCard(list[activeIndex]);
+}
+document.getElementById('cardPrev').onclick = ()=>navCard(-1);
+document.getElementById('cardNext').onclick = ()=>navCard(1);
+document.getElementById('closeCard').onclick = closeCard;
+document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeCard(); });
+
+function renderViewCard(item){
+  document.getElementById('cardTop').style.background = cardBackground(item);
+  document.getElementById('cardCode').textContent = item.code||'';
+  document.getElementById('cardTitle').textContent = item.title;
+  document.getElementById('cardPhase').textContent = phaseInfo(item.phase) ? phaseInfo(item.phase).label : '';
+  const list = filteredData();
+  document.getElementById('cardCounter').textContent = `${activeIndex+1} / ${list.length}`;
+  document.getElementById('cardPrev').disabled = activeIndex<=0;
+  document.getElementById('cardNext').disabled = activeIndex>=list.length-1;
+  document.getElementById('cardBody').innerHTML = `
+    <div class="block pain">
+      <div class="block-label"><span class="mark"></span>The pain point</div>
+      <div class="block-text">${escapeHtml(item.pain)}</div>
+    </div>
+    <div class="block solution">
+      <div class="block-label"><span class="mark"></span>The Webdrone solution</div>
+      <div class="block-text">${escapeHtml(item.title)}</div>
+    </div>
+    <div class="block">
+      <div class="block-label"><span class="mark"></span>How it works</div>
+      <div class="block-text">${escapeHtml(item.explanation)}</div>
+    </div>
+  `;
+}
+
+/* ---------------- Init ---------------- */
+renderTabs();
+renderFan();
+</script>
+</body>
+</html>
